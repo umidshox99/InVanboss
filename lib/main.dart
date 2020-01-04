@@ -1,6 +1,7 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:inoneboss/VerifyPage.dart';
 
 void main() => runApp(MaterialApp(
       home: RegPage(),
@@ -15,6 +16,7 @@ class RegPage extends StatefulWidget {
 class _RegPageState extends State<RegPage> {
   final number = TextEditingController();
   var ccp = "+998";
+  var isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -93,16 +95,20 @@ class _RegPageState extends State<RegPage> {
                   ),
                 ),
               ),
-              RaisedButton(
-                  onPressed: () {
-                    _makePostRequest(ccp + number.text);
-                  },
-                  textColor: Colors.white,
-                  color: Colors.grey,
-                  padding: const EdgeInsets.all(8.0),
-                  child: new Text(
-                    "Send",
-                  )),
+              Container(
+                child: !isLoading
+                    ? RaisedButton(
+                        onPressed: () {
+                          _makePostRequest(ccp + number.text);
+                        },
+                        textColor: Colors.white,
+                        color: Colors.grey,
+                        padding: const EdgeInsets.all(8.0),
+                        child: new Text(
+                          "Send",
+                        ))
+                    : CircularProgressIndicator(),
+              ),
             ],
           ),
         ),
@@ -111,6 +117,9 @@ class _RegPageState extends State<RegPage> {
   }
 
   _makePostRequest(String text) async {
+    setState(() {
+      isLoading = true;
+    });
     String url = 'http://purch.invan.uz/user/login';
     Map<String, String> headers = {
       "Accept-Version": "1.0.0",
@@ -124,7 +133,13 @@ class _RegPageState extends State<RegPage> {
       print(response.body);
       print(response.headers);
       print(json);
+      setState(() {
+        isLoading = false;
+
+      });
+        Navigator.push(context, VerifyPage());
     } catch (e) {}
+
   }
 
   @override

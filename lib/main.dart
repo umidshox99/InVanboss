@@ -137,7 +137,7 @@ class _RegPageState extends State<RegPage> {
         isLoading = false;
 
       });
-        Navigator.push(context, VerifyPage());
+//        Navigator.push(context, VerifyPage());
     } catch (e) {}
 
   }
